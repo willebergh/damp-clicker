@@ -50,7 +50,7 @@ export default function RaceScreen() {
     const [time, setTime] = React.useState(playTime)
 
 
-    const [records, setRecords] = React.useState(null);
+    const [records, setRecords] = React.useState({});
     const [hasEnded, setHasEnded] = React.useState(false);
     const [currentRecord, setCurrentRecord] = React.useState({
         clicks: "", playTime: "", clicksPerSecond: "",
@@ -72,7 +72,7 @@ export default function RaceScreen() {
     const getRecords = async () => {
         try {
             const newRecords = JSON.parse(await AsyncStorage.getItem("race-records"));
-            setRecords(newRecords);
+            setRecords(newRecords !== null ? newRecords : {});
         } catch (err) {
             console.error(err);
         }
@@ -113,7 +113,7 @@ export default function RaceScreen() {
         }
 
         const getNewRecords = () => {
-            if (!records[playTime]) {
+            if (!records.hasOwnProperty(playTime)) {
                 return { ...records, [playTime]: newRaceStats };
             } else {
                 const current = records[playTime];
